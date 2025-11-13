@@ -1,7 +1,6 @@
 using UI.Tests.Pages;
 using Microsoft.Playwright;
 using Microsoft.Playwright.Xunit;
-using System.Runtime.InteropServices;
 namespace UI.Tests;
 
 public class LoginTests : PageTest
