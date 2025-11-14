@@ -13,7 +13,7 @@ public class LoginPage
     private ILocator LoginContainer => _page.Locator("#login_button_container");
 
 
-    public LoginPage(IPage page)
+    public LoginPage(IPage page) : base()
     {
         _page = page;
         this.GoToAsync().GetAwaiter().GetResult();
