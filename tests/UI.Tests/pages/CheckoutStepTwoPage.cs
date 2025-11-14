@@ -1,4 +1,5 @@
 using Microsoft.Playwright;
+using Newtonsoft.Json;
 
 namespace UI.Tests.Pages;
 
