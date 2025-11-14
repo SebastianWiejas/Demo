@@ -12,9 +12,9 @@ public class InventoryPage : BasePage
 
     public InventoryPage(IPage page) : base(page)
     {
-        _inventoryContainer = _page.Locator("#inventory_container");
+        _inventoryContainer = _page.GetByTestId("inventory-container");
         _inventoryItem = _inventoryContainer.GetByTestId("inventory-item");
-        _inventoryItemName = _inventoryContainer.GetByTestId("inventory_item_name");
+        _inventoryItemName = _page.GetByTestId("inventory-item-name");
         _inventoryItemAddToCartButtonQuery = "button";
         _inventoryItemRemoveToCartButtonQuery = "button";
         
@@ -22,19 +22,19 @@ public class InventoryPage : BasePage
 
     private async Task<ILocator> GetInventoryItemWithNameAsync(string name)
     {
-        var inventoryItemNames = await _inventoryItemName
-            .Filter(new LocatorFilterOptions { HasTextString = name }).AllAsync();
+        var inventoryItemNames = _inventoryItemName
+            .Filter(new LocatorFilterOptions { HasTextString = name });
         
-        if (inventoryItemNames.Count == 0)
-        {
-            throw new Exception($"There is no inventory item with name '{name}'");
-        }
-        if (inventoryItemNames.Count > 1)
-        {
-            throw new Exception($"There is more than one inventory item with name '{name}'");
-        }
+        // if (inventoryItemNames.Count == 0)
+        // {
+        //     throw new Exception($"There is no inventory item with name '{name}'");
+        // }
+        // if (inventoryItemNames.Count > 1)
+        // {
+        //     throw new Exception($"There is more than one inventory item with name '{name}'");
+        // }
 
-        return _inventoryItem.Filter(new LocatorFilterOptions { Has = inventoryItemNames[0] });
+        return _inventoryItem.Filter(new LocatorFilterOptions { Has = inventoryItemNames });
     }
 
     public async Task AddItemToCart(string name)
