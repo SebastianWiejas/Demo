@@ -2,26 +2,21 @@ using Microsoft.Playwright;
 
 namespace UI.Tests.Pages;
 
-public class LoginPage
+public class LoginPage : BasePage
 {
-    private readonly IPage _page;
     private readonly ILocator _usernameInput;
     private readonly ILocator _passwordInput;
     private readonly ILocator _loginButton;
     private readonly ILocator _errorContainer;
+    private readonly ILocator _loginContainer;
 
-    private ILocator LoginContainer => _page.Locator("#login_button_container");
-
-
-    public LoginPage(IPage page) : base()
+    public LoginPage(IPage page) : base(page)
     {
-        _page = page;
-        this.GoToAsync().GetAwaiter().GetResult();
-
-        _usernameInput = LoginContainer.Locator("#user-name");
-        _passwordInput = LoginContainer.Locator("#password");
-        _loginButton = LoginContainer.Locator("#login-button");
-        _errorContainer = LoginContainer.Locator("h3[data-test='error']");
+        _loginContainer = _page.Locator("#login_button_container");
+        _usernameInput = _loginContainer.GetByTestId("username");
+        _passwordInput = _loginContainer.GetByTestId("password");
+        _loginButton = _loginContainer.GetByTestId("login-button");
+        _errorContainer = _loginContainer.GetByTestId("error");         
     }
 
     public async Task GoToAsync()
