@@ -2,41 +2,39 @@ using Microsoft.Playwright;
 
 namespace UI.Tests.Pages;
 
-public class InventoryPage
+public class InventoryPage : BasePage
 {
-    private readonly IPage _page;
     private readonly ILocator _inventoryContainer;
     private readonly ILocator _inventoryItem;
     private readonly ILocator _inventoryItemName;
     private readonly string _inventoryItemAddToCartButtonQuery;
     private readonly string _inventoryItemRemoveToCartButtonQuery;
 
-    public InventoryPage(IPage page)
+    public InventoryPage(IPage page) : base(page)
     {
-        _page = page;
         _inventoryContainer = _page.Locator("#inventory_container");
-        _inventoryItem = _inventoryContainer.Locator(".inventory_item");
-        _inventoryItemName = _inventoryItem.Locator(".inventory_item_name");
-        _inventoryItemAddToCartButtonQuery = "#add-to-cart-sauce-labs-backpack";
-        _inventoryItemRemoveToCartButtonQuery = "#remove-sauce-labs-bike-light";
+        _inventoryItem = _inventoryContainer.GetByTestId("inventory-item");
+        _inventoryItemName = _inventoryContainer.GetByTestId("inventory_item_name");
+        _inventoryItemAddToCartButtonQuery = "button";
+        _inventoryItemRemoveToCartButtonQuery = "button";
         
     }
 
     private async Task<ILocator> GetInventoryItemWithNameAsync(string name)
     {
-        var child = await _inventoryItemName
+        var inventoryItemNames = await _inventoryItemName
             .Filter(new LocatorFilterOptions { HasTextString = name }).AllAsync();
         
-        if (child.Count == 0)
+        if (inventoryItemNames.Count == 0)
         {
             throw new Exception($"There is no inventory item with name '{name}'");
         }
-        if (child.Count > 1)
+        if (inventoryItemNames.Count > 1)
         {
             throw new Exception($"There is more than one inventory item with name '{name}'");
         }
 
-        return _inventoryItem.Filter(new LocatorFilterOptions { Has = child[0] });
+        return _inventoryItem.Filter(new LocatorFilterOptions { Has = inventoryItemNames[0] });
     }
 
     public async Task AddItemToCart(string name)
@@ -52,12 +50,12 @@ public class InventoryPage
 
     private async Task ClickAddToCartButton(ILocator item)
     {
-        await item.Locator(_inventoryItemAddToCartButtonQuery).ClickAsync();
+        await item.Locator(_inventoryItemAddToCartButtonQuery).Filter(new LocatorFilterOptions { HasTextString = "Add to cart" }).ClickAsync();
     }
 
     private async Task ClickRemoveFromCartButton(ILocator item)
     {
-        await item.Locator(_inventoryItemRemoveToCartButtonQuery).ClickAsync();
+        await item.Locator(_inventoryItemRemoveToCartButtonQuery).Filter(new LocatorFilterOptions { HasTextString = "Remove" }).ClickAsync();
     }
 
 }
