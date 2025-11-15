@@ -16,6 +16,9 @@ Ten projekt zawiera przykładową implementację testów API oraz testów UI. Te
 - Microsoft.Extensions.Configuration
 
 # Uruchamianie
+## Wymagania wstępne
+Celem instalacji PlayWright należy wykonać instrukcje z podanego linku
+https://playwright.dev/dotnet/docs/intro
 ## Tryb headless
 ```
 dotnet test -e DEMO_API_KEY="reqres-free-v1" --logger html -- Playwright.BrowserName=chromium Playwright.LaunchOptions.Headless=true Playwright.LaunchOptions.Channel=msedge
