@@ -6,10 +6,10 @@ public class CheckoutStepOnePage
     private readonly IPage _page;
 
     private ILocator CheckoutContainer => _page.Locator("");
-    private ILocator FirstNameInput => CheckoutContainer.Locator("");
-    private ILocator LastNameInput => CheckoutContainer.Locator("");
-    private ILocator PostalCodeInput => CheckoutContainer.Locator("");
-    private ILocator ContinueButton => CheckoutContainer.Locator("");
+    private ILocator FirstNameInput => CheckoutContainer.GetByTestId("firstName");
+    private ILocator LastNameInput => CheckoutContainer.GetByTestId("lastName");
+    private ILocator PostalCodeInput => CheckoutContainer.Locator("postalCode");
+    private ILocator ContinueButton => CheckoutContainer.Locator("continue");
 
     public CheckoutStepOnePage(IPage page)
     {
