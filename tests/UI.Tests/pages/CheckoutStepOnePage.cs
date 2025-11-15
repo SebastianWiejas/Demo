@@ -8,8 +8,8 @@ public class CheckoutStepOnePage
     private ILocator CheckoutContainer => _page.Locator("");
     private ILocator FirstNameInput => CheckoutContainer.GetByTestId("firstName");
     private ILocator LastNameInput => CheckoutContainer.GetByTestId("lastName");
-    private ILocator PostalCodeInput => CheckoutContainer.Locator("postalCode");
-    private ILocator ContinueButton => CheckoutContainer.Locator("continue");
+    private ILocator PostalCodeInput => CheckoutContainer.GetByTestId("postalCode");
+    private ILocator ContinueButton => CheckoutContainer.GetByTestId("continue");
 
     public CheckoutStepOnePage(IPage page)
     {
@@ -18,21 +18,21 @@ public class CheckoutStepOnePage
 
     public async Task EnterFirstNameAsync(string firstName)
     {
-        await CheckoutContainer.Locator(FirstNameInput).FillAsync(firstName);
+        await FirstNameInput.FillAsync(firstName);
     }
 
     public async Task EnterLastNameAsync(string lastName)
     {
-        await CheckoutContainer.Locator(LastNameInput).FillAsync(lastName);
+        await LastNameInput.FillAsync(lastName);
     }
 
     public async Task EnterPostalCodeAsync(string postalCode)
     {
-        await CheckoutContainer.Locator(PostalCodeInput).FillAsync(postalCode);
+        await PostalCodeInput.FillAsync(postalCode);
     }
 
     public async Task ClickContinueAsync()
     {
-        await CheckoutContainer.Locator(ContinueButton).ClickAsync();
+        await ContinueButton.ClickAsync();
     }
 }
