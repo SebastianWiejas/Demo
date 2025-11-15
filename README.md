@@ -1,4 +1,4 @@
-# Demo Projekt
+# Projekt Demo
 Ten projekt zawiera przykładową implementację testów API oraz testów UI. Testy UI zrealizowane w oparciu o POM.
 
 # Tech Stack
@@ -15,8 +15,17 @@ Ten projekt zawiera przykładową implementację testów API oraz testów UI. Te
 - XUnit
 - Microsoft.Extensions.Configuration
 
-# Quick run
+# Uruchamianie
 ## Tryb headless
+```
+dotnet test -e DEMO_API_KEY="reqres-free-v1" --logger html -- Playwright.BrowserName=chromium Playwright.LaunchOptions.Headless=true Playwright.LaunchOptions.Channel=msedge
+```
+
+## Tryb Headed
+```
+dotnet test -e DEMO_API_KEY="reqres-free-v1" --logger html -- Playwright.BrowserName=chromium Playwright.LaunchOptions.Headless=false Playwright.LaunchOptions.Channel=msedge
+```
+
 
 # Struktura repozytorium
 Repozytorium zawiera jedną solucję oraz 2 projekty: Demo.sln oraz UI.Tests.csproj i API.Tests.csproj.
@@ -41,7 +50,17 @@ Repozytorium zawiera jedną solucję oraz 2 projekty: Demo.sln oraz UI.Tests.csp
     - Configuration.cs: pozwala na ładowanie konfiguracji;
     - Endpoints.cs: zawiera definicje endpointów. customEndpoints dodane dla przykładu.
     - User.cs: klasa odzwierciedlająca użytkownika przekazywanego/otrzymywanego do/z api
-    - tests: zawiera testy
+    - tests: zawiera testy.
+
+
+# Rezultaty
+![alt text](images/cli.results.png)
+
+## UI.Tests
+![alt text](images/ui.tests.Results.png)
+
+## API.Tests
+![alt text](images/api.tests.results.png)
     
 
 
