@@ -5,7 +5,7 @@ public class CheckoutStepOnePage
 {
     private readonly IPage _page;
 
-    private ILocator CheckoutContainer => _page.Locator("");
+    private ILocator CheckoutContainer => _page.GetByTestId("checkout-info-container");
     private ILocator FirstNameInput => CheckoutContainer.GetByTestId("firstName");
     private ILocator LastNameInput => CheckoutContainer.GetByTestId("lastName");
     private ILocator PostalCodeInput => CheckoutContainer.GetByTestId("postalCode");
