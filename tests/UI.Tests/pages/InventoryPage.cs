@@ -21,7 +21,7 @@ public class InventoryPage : BasePage
     }
     public async Task GoToAsync()
     {
-        await _page.GotoAsync("https://www.saucedemo.com/inventory.html");
+        await _page.GotoAsync("/inventory.html");
     }
     private async Task<ILocator> GetInventoryItemWithNameAsync(string name)
     {

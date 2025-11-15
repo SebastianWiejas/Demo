@@ -21,7 +21,7 @@ public class CartPage
 
     public async Task GoToAsync()
     {
-        await _page.GotoAsync("https://www.saucedemo.com/cart.html");
+        await _page.GotoAsync("/cart.html");
     }
 
     public async Task<int> GetNumberOfItemsInCartAsync()

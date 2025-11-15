@@ -21,7 +21,7 @@ public class LoginPage : BasePage
 
     public async Task GoToAsync()
     {
-        await _page.GotoAsync("https://www.saucedemo.com/");
+        await _page.GotoAsync("/");
     }
 
     public async Task EnterUsername(string username)
