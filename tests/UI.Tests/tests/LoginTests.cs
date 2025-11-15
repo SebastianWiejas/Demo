@@ -16,6 +16,7 @@ public class LoginTests : TestsBase
             return Configuration.Credentials!.Select(cred => new object[] { cred.Username, cred.Password, cred.Valid });
         }
     }
+    private const string _item1 = "Sauce Labs Backpack";
 
     [Theory]
     [MemberData(nameof(LoginTestData))]
@@ -30,7 +31,7 @@ public class LoginTests : TestsBase
             var errorMessages = await loginPage.GetErrorMessage();
             Assert.Empty(errorMessages);
             var inventoryPage = new InventoryPage(Page);
-            Assert.True(await inventoryPage.IsItemInInventoryAsync("Sauce Labs Backpack"));
+            Assert.True(await inventoryPage.IsItemInInventoryAsync(_item1));
         }
         else
         {

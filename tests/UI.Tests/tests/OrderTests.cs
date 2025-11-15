@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using Microsoft.Playwright;
 using UI.Tests.Helpers;
 using UI.Tests.Pages;
@@ -8,23 +9,8 @@ public class OrderTests : TestsBase
         [Fact]
         public async Task OrderItemsTest()
         {
-                await Page.LoginAsStandardUserAsync();
-                var inventoryPage = new InventoryPage(Page);
-                await inventoryPage.GoToAsync();
-                await inventoryPage.AddItemToCart("Sauce Labs Backpack");
-                await inventoryPage.AddItemToCart("Sauce Labs Bike Light");
-
-                var cartPage = new CartPage(Page);
-                await cartPage.GoToAsync();
-                await cartPage.ProceedToCheckoutAsync();
-
-                var checkoutStepOnePage = new CheckoutStepOnePage(Page);
-                await checkoutStepOnePage.EnterFirstNameAsync("John");
-                await checkoutStepOnePage.EnterLastNameAsync("Doe");
-                await checkoutStepOnePage.EnterPostalCodeAsync("12345");
-                await checkoutStepOnePage.ClickContinueAsync();
-
-                var checkoutStepTwoPage = new CheckoutStepTwoPage(Page);
+                var item1 = "Sauce Labs Backpack";
+                var item2 = "Sauce Labs Bike Light";
 
                 var expectedItem1Price = "$29.99";
                 var expectedItem2Price = "$9.99";
@@ -33,12 +19,36 @@ public class OrderTests : TestsBase
                 var expectedItemTotal = $"Item total: $39.98";
                 var expectedTax = $"Tax: $3.20";
                 var expectedTotal = $"Total: $43.18";
+                var expectedHeaderText = "Thank you for your order!";
+
+                var firstName = "Seb";
+                var lastName = "Sebowy";
+                var postalCode = "00000";
+
+
+                await Page.LoginAsStandardUserAsync();
+                var inventoryPage = new InventoryPage(Page);
+                await inventoryPage.GoToAsync();
+                await inventoryPage.AddItemToCart(item1);
+                await inventoryPage.AddItemToCart(item2);
+
+                var cartPage = new CartPage(Page);
+                await cartPage.GoToAsync();
+                await cartPage.ProceedToCheckoutAsync();
+
+                var checkoutStepOnePage = new CheckoutStepOnePage(Page);
+                await checkoutStepOnePage.EnterFirstNameAsync(firstName);
+                await checkoutStepOnePage.EnterLastNameAsync(lastName);
+                await checkoutStepOnePage.EnterPostalCodeAsync(postalCode);
+                await checkoutStepOnePage.ClickContinueAsync();
+
+                var checkoutStepTwoPage = new CheckoutStepTwoPage(Page);
 
                 Assert.Equal(2, await checkoutStepTwoPage.GetNumberOfItems());
-                Assert.True(await checkoutStepTwoPage.IsItemWithNameInListAsync("Sauce Labs Backpack"));
-                Assert.True(await checkoutStepTwoPage.IsItemWithNameInListAsync("Sauce Labs Bike Light"));
-                Assert.Equal(expectedItem1Price, await checkoutStepTwoPage.GetItemPriceAsync("Sauce Labs Backpack"));
-                Assert.Equal(expectedItem2Price, await checkoutStepTwoPage.GetItemPriceAsync("Sauce Labs Bike Light"));
+                Assert.True(await checkoutStepTwoPage.IsItemWithNameInListAsync(item1));
+                Assert.True(await checkoutStepTwoPage.IsItemWithNameInListAsync(item2));
+                Assert.Equal(expectedItem1Price, await checkoutStepTwoPage.GetItemPriceAsync(item1));
+                Assert.Equal(expectedItem2Price, await checkoutStepTwoPage.GetItemPriceAsync(item2));
                 Assert.Equal(expectedPaymentInfo, await checkoutStepTwoPage.GetPaymentInfoAsync());
                 Assert.Equal(expectedShippingInfo, await checkoutStepTwoPage.GetShippingInfoAsync());
                 Assert.Equal(expectedItemTotal, await checkoutStepTwoPage.GetItemTotalAsync());
@@ -47,7 +57,6 @@ public class OrderTests : TestsBase
 
                 await checkoutStepTwoPage.ClickFinishAsync();
                 var checkoutCompletePage = new CheckoutCompletePage(Page);
-                var expectedHeaderText = "Thank you for your order!";
                 Assert.Equal(expectedHeaderText, await checkoutCompletePage.GetCompleteHeaderText());
         }
 }
