@@ -1,0 +1,53 @@
+using Microsoft.Playwright;
+using UI.Tests.Helpers;
+using UI.Tests.Pages;
+
+namespace UI.Tests.Tests;
+public class OrderTests : TestsBase
+{
+        [Fact]
+        public async Task OrderItemsTest()
+        {
+                await Page.LoginAsStandardUserAsync();
+                var inventoryPage = new InventoryPage(Page);
+                await inventoryPage.GoToAsync();
+                await inventoryPage.AddItemToCart("Sauce Labs Backpack");
+                await inventoryPage.AddItemToCart("Sauce Labs Bike Light");
+
+                var cartPage = new CartPage(Page);
+                await cartPage.GoToAsync();
+                await cartPage.ProceedToCheckoutAsync();
+
+                var checkoutStepOnePage = new CheckoutStepOnePage(Page);
+                await checkoutStepOnePage.EnterFirstNameAsync("John");
+                await checkoutStepOnePage.EnterLastNameAsync("Doe");
+                await checkoutStepOnePage.EnterPostalCodeAsync("12345");
+                await checkoutStepOnePage.ClickContinueAsync();
+
+                var checkoutStepTwoPage = new CheckoutStepTwoPage(Page);
+
+                var expectedItem1Price = "$29.99";
+                var expectedItem2Price = "$9.99";
+                var expectedPaymentInfo = "SauceCard #31337";
+                var expectedShippingInfo = "Free Pony Express Delivery!";
+                var expectedItemTotal = $"Item total: $39.98";
+                var expectedTax = $"Tax: $3.20";
+                var expectedTotal = $"Total: $43.18";
+
+                Assert.Equal(2, await checkoutStepTwoPage.GetNumberOfItems());
+                Assert.True(await checkoutStepTwoPage.IsItemWithNameInListAsync("Sauce Labs Backpack"));
+                Assert.True(await checkoutStepTwoPage.IsItemWithNameInListAsync("Sauce Labs Bike Light"));
+                Assert.Equal(expectedItem1Price, await checkoutStepTwoPage.GetItemPriceAsync("Sauce Labs Backpack"));
+                Assert.Equal(expectedItem2Price, await checkoutStepTwoPage.GetItemPriceAsync("Sauce Labs Bike Light"));
+                Assert.Equal(expectedPaymentInfo, await checkoutStepTwoPage.GetPaymentInfoAsync());
+                Assert.Equal(expectedShippingInfo, await checkoutStepTwoPage.GetShippingInfoAsync());
+                Assert.Equal(expectedItemTotal, await checkoutStepTwoPage.GetItemTotalAsync());
+                Assert.Equal(expectedTax, await checkoutStepTwoPage.GetTaxAsync());
+                Assert.Equal(expectedTotal, await checkoutStepTwoPage.GetTotalAsync());
+
+                await checkoutStepTwoPage.ClickFinishAsync();
+                var checkoutCompletePage = new CheckoutCompletePage(Page);
+                var expectedHeaderText = "Thank you for your order!";
+                Assert.Equal(expectedHeaderText, await checkoutCompletePage.GetCompleteHeaderText());
+        }
+}

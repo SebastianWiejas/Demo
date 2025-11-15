@@ -10,15 +10,15 @@ public class CheckoutStepTwoPage
     private ILocator ItemList => CheckoutContainer.GetByTestId("cart-list");
     private ILocator Item => ItemList.GetByTestId("inventory-item");
     private ILocator ItemName => _page.GetByTestId("inventory-item-name");
-    private ILocator ItemDescription => Item.GetByTestId("inventory-item-desc");
-    private ILocator ItemPrice => Item.GetByTestId("inventory-item-price");
+    private ILocator ItemDescription => _page.GetByTestId("inventory-item-desc");
+    private ILocator ItemPrice => _page.GetByTestId("inventory-item-price");
     private ILocator FinishButton => CheckoutContainer.GetByTestId("finish");
     private ILocator CancelButton => CheckoutContainer.GetByTestId("cancel");
     private ILocator ItemTotalText => CheckoutContainer.GetByTestId("subtotal-label");
     private ILocator TaxText => CheckoutContainer.GetByTestId("tax-label");
     private ILocator TotalText => CheckoutContainer.GetByTestId("total-label");
     private ILocator PaymentInfoText => CheckoutContainer.GetByTestId("payment-info-value");
-    private ILocator ShippingInfoText => CheckoutContainer.GetByTestId("shipping-info-label");
+    private ILocator ShippingInfoText => CheckoutContainer.GetByTestId("shipping-info-value");
     public ILocator ItemQuantity => _page.GetByTestId("item-quantity");
 
     public CheckoutStepTwoPage(IPage page)
@@ -92,19 +92,19 @@ public class CheckoutStepTwoPage
     public async Task<string> GetItemDescriptionAsync(string name)
     {
         var item = await GetItemByNameAsync(name);
-        return await ItemDescription.InnerTextAsync();
+        return await item.Locator(ItemDescription).InnerTextAsync();
     }
 
     public async Task<string> GetItemPriceAsync(string name)
     {
         var item = await GetItemByNameAsync(name);
-        return await ItemPrice.InnerTextAsync();
+        return await item.Locator(ItemPrice).InnerTextAsync();
     }
 
     public async Task<int> GetItemQuantityAsync(string name)
     {
         var item = await GetItemByNameAsync(name);
-        var quantityText = await ItemQuantity.InnerTextAsync();
+        var quantityText = await item.Locator(ItemQuantity).InnerTextAsync();
         return int.Parse(quantityText);
     }
 

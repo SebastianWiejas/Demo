@@ -3,7 +3,6 @@ using Microsoft.Playwright.Xunit;
 using UI.Tests.Helpers;
 using UI.Tests.Pages;
 namespace UI.Tests.Tests;
-
 public class CartTests : TestsBase
 {
 

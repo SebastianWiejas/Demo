@@ -3,6 +3,7 @@ using Microsoft.Playwright.Xunit;
 
 namespace UI.Tests.Tests;
 
+[Collection("Sequential")]
 public abstract class TestsBase : PageTest, IDisposable
 {
     public void Dispose()
