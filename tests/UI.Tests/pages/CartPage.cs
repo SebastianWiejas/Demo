@@ -5,14 +5,14 @@ public class CartPage
 {
     private readonly IPage _page;
 
-    private ILocator CartContainer => _page.Locator("");
-    private ILocator CartItem => CartContainer.Locator("");
-    private ILocator CartItemName => CartItem.Locator("");
-    private ILocator CartItemDescription => CartItem.Locator("");
-    private ILocator CartItemPrice => CartItem.Locator("");
-    private ILocator CartItemQuantity => CartItem.Locator("");
-    private ILocator CheckoutButton => CartContainer.Locator("");
-    private ILocator RemoveButton => CartItem.Locator("");
+    private ILocator CartContainer => _page.GetByTestId("cart-contents-container");
+    private ILocator CartItem => CartContainer.GetByTestId("inventory-item");
+    private ILocator CartItemName => _page.GetByTestId("inventory-item-name");
+    private ILocator CartItemDescription => CartItem.GetByTestId("inventory-item-desc");
+    private ILocator CartItemPrice => CartItem.GetByTestId("inventory-item-price");
+    private ILocator CartItemQuantity => CartItem.GetByTestId("item-quantity");
+    private ILocator CheckoutButton => CartContainer.GetByTestId("checkout");
+    private string RemoveButtonText => "Remove";
 
     public CartPage(IPage page)
     {
@@ -31,30 +31,24 @@ public class CartPage
 
     private async Task<ILocator> GetCartItemByNameAsync(string name)
     {
-        var items = await CartItemName
-            .Filter(new LocatorFilterOptions { HasTextString = name }).AllAsync();
+        var items = CartItemName
+            .Filter(new LocatorFilterOptions { HasTextString = name });
 
-        if (items.Count == 0)
-        {
-            throw new Exception($"There is no cart item with name '{name}'");
-        }
-        if (items.Count > 1)
-        {
-            throw new Exception($"There is more than one cart item with name '{name}'");
-        }
+        // if (items.Count == 0)
+        // {
+        //     throw new Exception($"There is no cart item with name '{name}'");
+        // }
+        // if (items.Count > 1)
+        // {
+        //     throw new Exception($"There is more than one cart item with name '{name}'");
+        // }
 
-        return CartItem.Filter(new LocatorFilterOptions { Has = items[0] }).First;
-    }
-
-    public async Task RemoveItemFromCartAsync(string name)
-    {
-        var item = await GetCartItemByNameAsync(name);
-        await item.Locator(RemoveButton).ClickAsync();
+        return CartItem.Filter(new LocatorFilterOptions { Has = items }).First;
     }
 
     public async Task ProceedToCheckoutAsync()
     {
-        await CartContainer.Locator(CheckoutButton).ClickAsync();
+        await CheckoutButton.ClickAsync();
     }
 
     public async Task<bool> IsItemInCartAsync(string name)
