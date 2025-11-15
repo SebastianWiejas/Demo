@@ -1,5 +1,4 @@
 using Microsoft.Playwright;
-using Newtonsoft.Json;
 
 namespace UI.Tests.Pages;
 
@@ -7,21 +6,20 @@ public class CheckoutStepTwoPage
 {
     private readonly IPage _page;
 
-    private ILocator CheckoutContainer => _page.Locator("");
-    private ILocator ItemList => CheckoutContainer.Locator("");
-    private ILocator Item => ItemList.Locator("");
-    private ILocator ItemName => Item.Locator("");
-    private ILocator ItemDescription => Item.Locator("");
-    private ILocator ItemPrice => Item.Locator("");
-    private ILocator FinishButton => CheckoutContainer.Locator("");
-    private ILocator CancelButton => CheckoutContainer.Locator("");
-    private ILocator ItemTotalText => CheckoutContainer.Locator("");
-    private ILocator TaxText => CheckoutContainer.Locator("");
-    private ILocator TotalText => CheckoutContainer.Locator("");
-    private ILocator PaymentInfoText => CheckoutContainer.Locator("");
-    private ILocator ShippingInfoText => CheckoutContainer.Locator("");
-
-    public string ItemQuantity { get; private set; }
+    private ILocator CheckoutContainer => _page.GetByTestId("checkout-summary-container");
+    private ILocator ItemList => CheckoutContainer.GetByTestId("cart-list");
+    private ILocator Item => ItemList.GetByTestId("inventory-item");
+    private ILocator ItemName => Item.GetByTestId("inventory-item-name");
+    private ILocator ItemDescription => Item.GetByTestId("inventory-item-desc");
+    private ILocator ItemPrice => Item.GetByTestId("inventory-item-price");
+    private ILocator FinishButton => CheckoutContainer.GetByTestId("finish");
+    private ILocator CancelButton => CheckoutContainer.GetByTestId("cancel");
+    private ILocator ItemTotalText => CheckoutContainer.GetByTestId("subtotal-label");
+    private ILocator TaxText => CheckoutContainer.GetByTestId("tax-label");
+    private ILocator TotalText => CheckoutContainer.GetByTestId("total-label");
+    private ILocator PaymentInfoText => CheckoutContainer.GetByTestId("payment-info-value");
+    private ILocator ShippingInfoText => CheckoutContainer.GetByTestId("shipping-info-label");
+    public ILocator ItemQuantity => _page.GetByTestId("item-quantity");
 
     public CheckoutStepTwoPage(IPage page)
     {
@@ -30,33 +28,33 @@ public class CheckoutStepTwoPage
 
     public async Task ClickFinishAsync()
     {
-        await CheckoutContainer.Locator(FinishButton).ClickAsync();
+        await FinishButton.ClickAsync();
     }
 
     public async Task ClickCancelAsync()
     {
-        await CheckoutContainer.Locator(CancelButton).ClickAsync();
+        await CancelButton.ClickAsync();
     }
 
     public async Task<string> GetItemTotalAsync()
     {
-        return await CheckoutContainer.Locator(ItemTotalText).InnerTextAsync();
+        return await ItemTotalText.InnerTextAsync();
     }
     public async Task<string> GetTaxAsync()
     {
-        return await CheckoutContainer.Locator(TaxText).InnerTextAsync();
+        return await TaxText.InnerTextAsync();
     }
     public async Task<string> GetTotalAsync()
     {
-        return await CheckoutContainer.Locator(TotalText).InnerTextAsync();
+        return await TotalText.InnerTextAsync();
     }
     public async Task<string> GetPaymentInfoAsync()
     {
-        return await CheckoutContainer.Locator(PaymentInfoText).InnerTextAsync();
+        return await PaymentInfoText.InnerTextAsync();
     }
     public async Task<string> GetShippingInfoAsync()
     {
-        return await CheckoutContainer.Locator(ShippingInfoText).InnerTextAsync();
+        return await ShippingInfoText.InnerTextAsync();
     }
 
     public async Task<int> GetNumberOfItems()
@@ -92,19 +90,19 @@ public class CheckoutStepTwoPage
     public async Task<string> GetItemDescriptionAsync(string name)
     {
         var item = await GetItemByNameAsync(name);
-        return await item.Locator(ItemDescription).InnerTextAsync();
+        return await ItemDescription.InnerTextAsync();
     }
 
     public async Task<string> GetItemPriceAsync(string name)
     {
         var item = await GetItemByNameAsync(name);
-        return await item.Locator(ItemPrice).InnerTextAsync();
+        return await ItemPrice.InnerTextAsync();
     }
 
     public async Task<int> GetItemQuantityAsync(string name)
     {
         var item = await GetItemByNameAsync(name);
-        var quantityText = await item.Locator(ItemQuantity).InnerTextAsync();
+        var quantityText = await ItemQuantity.InnerTextAsync();
         return int.Parse(quantityText);
     }
 
