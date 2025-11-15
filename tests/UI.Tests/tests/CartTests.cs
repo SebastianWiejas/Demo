@@ -1,58 +1,59 @@
 using Microsoft.Playwright;
+using Microsoft.Playwright.Xunit;
+using UI.Tests.Helpers;
 using UI.Tests.Pages;
 namespace UI.Tests.Tests;
+
 public class CartTests : TestsBase
 {
-    [Fact]
-    public async Task AddSingleItemToCartTest()
-    {
-            var loginPage = new LoginPage(Page);
-            await loginPage.GoToAsync();
-            await loginPage.Login("standard_user", "secret_sauce");
 
-            var inventoryPage = new InventoryPage(Page);
-            await inventoryPage.AddItemToCart("Sauce Labs Backpack");
+        public override async Task InitializeAsync()
+        {
+                await base.InitializeAsync().ConfigureAwait(false);
+                await Page.LoginAsStandardUserAsync();
+        }
 
-            var cartPage = new CartPage(Page);
-            await cartPage.GoToAsync();
+        [Fact]
+        public async Task AddSingleItemToCartTest()
+        {
+                var inventoryPage = new InventoryPage(Page);
+                await inventoryPage.GoToAsync();
+                await inventoryPage.AddItemToCart("Sauce Labs Backpack");
 
-            Assert.True(await cartPage.IsItemInCartAsync("Sauce Labs Backpack"));
-    }
+                var cartPage = new CartPage(Page);
+                await cartPage.GoToAsync();
 
-    [Fact]
-    public async Task AddMultipleItemsToCartTest()
-    {
-            var loginPage = new LoginPage(Page);
-            await loginPage.GoToAsync();
-            await loginPage.Login("standard_user", "secret_sauce");
+                Assert.True(await cartPage.IsItemInCartAsync("Sauce Labs Backpack"));
+        }
 
-            var inventoryPage = new InventoryPage(Page);
-            await inventoryPage.AddItemToCart("Sauce Labs Backpack");
-            await inventoryPage.AddItemToCart("Sauce Labs Bike Light");
+        [Fact]
+        public async Task AddMultipleItemsToCartTest()
+        {
+                var inventoryPage = new InventoryPage(Page);
+                await inventoryPage.GoToAsync();
+                await inventoryPage.AddItemToCart("Sauce Labs Backpack");
+                await inventoryPage.AddItemToCart("Sauce Labs Bike Light");
 
-            var cartPage = new CartPage(Page);
-            await cartPage.GoToAsync();
+                var cartPage = new CartPage(Page);
+                await cartPage.GoToAsync();
 
-            Assert.True(await cartPage.IsItemInCartAsync("Sauce Labs Backpack"));
-            Assert.True(await cartPage.IsItemInCartAsync("Sauce Labs Bike Light"));
-    }
+                Assert.True(await cartPage.IsItemInCartAsync("Sauce Labs Backpack"));
+                Assert.True(await cartPage.IsItemInCartAsync("Sauce Labs Bike Light"));
+        }
 
-    [Fact]
-    public async Task RemoveItemFromCartTest()
-    {
-            var loginPage = new LoginPage(Page);
-            await loginPage.GoToAsync();
-            await loginPage.Login("standard_user", "secret_sauce");
+        [Fact]
+        public async Task RemoveItemFromCartTest()
+        {
+                var inventoryPage = new InventoryPage(Page);
+                await inventoryPage.GoToAsync();
+                await inventoryPage.AddItemToCart("Sauce Labs Backpack");
+                await inventoryPage.AddItemToCart("Sauce Labs Bike Light");
+                await inventoryPage.RemoveItemFromCart("Sauce Labs Bike Light");
 
-            var inventoryPage = new InventoryPage(Page);
-            await inventoryPage.AddItemToCart("Sauce Labs Backpack");
-            await inventoryPage.AddItemToCart("Sauce Labs Bike Light");
-            await inventoryPage.RemoveItemFromCart("Sauce Labs Bike Light");
+                var cartPage = new CartPage(Page);
+                await cartPage.GoToAsync();
 
-            var cartPage = new CartPage(Page);
-            await cartPage.GoToAsync();
-
-            Assert.True(await cartPage.IsItemInCartAsync("Sauce Labs Backpack"));
-            Assert.False(await cartPage.IsItemInCartAsync("Sauce Labs Bike Light"));
-    }
+                Assert.True(await cartPage.IsItemInCartAsync("Sauce Labs Backpack"));
+                Assert.False(await cartPage.IsItemInCartAsync("Sauce Labs Bike Light"));
+        }
 }

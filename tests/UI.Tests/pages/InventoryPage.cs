@@ -19,7 +19,10 @@ public class InventoryPage : BasePage
         _inventoryItemRemoveToCartButtonQuery = "button";
         
     }
-
+    public async Task GoToAsync()
+    {
+        await _page.GotoAsync("https://www.saucedemo.com/inventory.html");
+    }
     private async Task<ILocator> GetInventoryItemWithNameAsync(string name)
     {
         var inventoryItemNames = _inventoryItemName
