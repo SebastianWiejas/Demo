@@ -9,7 +9,7 @@ public class CheckoutStepTwoPage
     private ILocator CheckoutContainer => _page.GetByTestId("checkout-summary-container");
     private ILocator ItemList => CheckoutContainer.GetByTestId("cart-list");
     private ILocator Item => ItemList.GetByTestId("inventory-item");
-    private ILocator ItemName => Item.GetByTestId("inventory-item-name");
+    private ILocator ItemName => _page.GetByTestId("inventory-item-name");
     private ILocator ItemDescription => Item.GetByTestId("inventory-item-desc");
     private ILocator ItemPrice => Item.GetByTestId("inventory-item-price");
     private ILocator FinishButton => CheckoutContainer.GetByTestId("finish");
@@ -70,21 +70,23 @@ public class CheckoutStepTwoPage
         return items.Count > 0;
     }
 
-    public async Task<ILocator> GetItemByNameAsync(string name)
+    private async Task<ILocator> GetItemByNameAsync(string name)
     {
-        var items = await ItemName
-            .Filter(new LocatorFilterOptions { HasTextString = name }).AllAsync();
+        var items = ItemName
+            .Filter(new LocatorFilterOptions { HasTextString = name });
 
-        if (items.Count == 0)
+        var parentItems = await Item.Filter(new LocatorFilterOptions { Has = items }).AllAsync();
+
+        if (parentItems.Count == 0)
         {
             throw new Exception($"There is no item with name '{name}'");
         }
-        if (items.Count > 1)
+        if (parentItems.Count > 1)
         {
             throw new Exception($"There is more than one item with name '{name}'");
         }
-
-        return Item.Filter(new LocatorFilterOptions { Has = items[0] }).First;
+        
+        return parentItems[0];
     }
 
     public async Task<string> GetItemDescriptionAsync(string name)
