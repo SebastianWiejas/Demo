@@ -1,3 +1,4 @@
+using API.Tests.helpers;
 using RestSharp;
 
 namespace API.Tests;
@@ -17,7 +18,7 @@ public class TestBase : IDisposable
         {
         };
         var client = new RestClient(options);
-        client.AddDefaultHeader("x-api-key", "reqres-free-v1");
+        client.AddDefaultHeader("x-api-key", Configuration.ApiKey!);
         return client;
     }
     public void Dispose()

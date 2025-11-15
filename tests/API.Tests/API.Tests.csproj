@@ -21,6 +21,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="config\credentials.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="config\appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  
+  <ItemGroup>
     <Using Include="Xunit" />
   </ItemGroup>
 
