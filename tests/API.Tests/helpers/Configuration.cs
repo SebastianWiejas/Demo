@@ -1,15 +1,14 @@
 using Microsoft.Extensions.Configuration;
-namespace UI.Tests.helpers;
+namespace API.Tests.helpers;
 
 public static class Configuration
 {   
     public static string? BaseUrl => Configure()["BaseUrl"];
-    public static IEnumerable<Credentials>? Credentials => Configure().GetSection("Credentials").Get<IEnumerable<Credentials>>();
     private static IConfigurationRoot Configure()
     {
         return new ConfigurationBuilder()
             .AddJsonFile("config/appsettings.json", optional: false, reloadOnChange: false)
-            .AddJsonFile("config/credentials.json", optional: false, reloadOnChange: false)
+            .AddEnvironmentVariables("API_TESTS")
             .Build();
     }
 }
