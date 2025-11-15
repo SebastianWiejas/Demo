@@ -9,7 +9,6 @@ public abstract class TestsBase : PageTest, IDisposable
 {
     public override async Task InitializeAsync()
     {
-        Configuration.Configure();
         await base.InitializeAsync().ConfigureAwait(false);
     }
     public void Dispose()
