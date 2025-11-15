@@ -40,6 +40,11 @@ public class InventoryPage : BasePage
         return _inventoryItem.Filter(new LocatorFilterOptions { Has = inventoryItemNames });
     }
 
+    public async Task<bool> IsItemInInventoryAsync(string name)
+    {
+        return await GetInventoryItemWithNameAsync(name).Result.CountAsync() == 1; //TODO: explain in readme why I use == 1, and alternatives
+    }
+
     public async Task AddItemToCart(string name)
     {
         var item = await GetInventoryItemWithNameAsync(name);

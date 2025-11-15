@@ -29,8 +29,8 @@ public class LoginTests : TestsBase
         {
             var errorMessages = await loginPage.GetErrorMessage();
             Assert.Empty(errorMessages);
-            var inventoryItemLink = Page.Locator("#item_0_img_link"); //TODO: Refactor this to InventoryPage
-            Assert.True(await inventoryItemLink.IsVisibleAsync());
+            var inventoryPage = new InventoryPage(Page);
+            Assert.True(await inventoryPage.IsItemInInventoryAsync("Sauce Labs Backpack"));
         }
         else
         {
