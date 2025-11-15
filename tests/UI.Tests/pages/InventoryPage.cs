@@ -28,16 +28,17 @@ public class InventoryPage : BasePage
         var inventoryItemNames = _inventoryItemName
             .Filter(new LocatorFilterOptions { HasTextString = name });
         
-        // if (inventoryItemNames.Count == 0)
-        // {
-        //     throw new Exception($"There is no inventory item with name '{name}'");
-        // }
-        // if (inventoryItemNames.Count > 1)
-        // {
-        //     throw new Exception($"There is more than one inventory item with name '{name}'");
-        // }
 
-        return _inventoryItem.Filter(new LocatorFilterOptions { Has = inventoryItemNames });
+        var inventoryItems = await _inventoryItem.Filter(new LocatorFilterOptions { Has = inventoryItemNames }).AllAsync();
+        if (inventoryItems.Count == 0)
+        {
+            throw new Exception($"There is no inventory item with name '{name}'");
+        }
+        if (inventoryItems.Count > 1)
+        {
+            throw new Exception($"There is more than one inventory item with name '{name}'");
+        }
+        return inventoryItems[0];
     }
 
     public async Task<bool> IsItemInInventoryAsync(string name)
