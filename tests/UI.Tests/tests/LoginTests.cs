@@ -1,16 +1,24 @@
+using UI.Tests.helpers;
 using UI.Tests.Pages;
 namespace UI.Tests.Tests;
 
 public class LoginTests : TestsBase
 {
+    public override async Task InitializeAsync()
+    {
+        await base.InitializeAsync().ConfigureAwait(false);
+    }
     
+    public static IEnumerable<object[]> LoginTestData
+    {
+        get
+        {
+            return Configuration.Credentials!.Select(cred => new object[] { cred.Username, cred.Password, cred.Valid });
+        }
+    }
+
     [Theory]
-    [InlineData("standard_user", "secret_sauce", true)]
-    [InlineData("performance_glitch_user", "secret_sauce", true)]
-    [InlineData("locked_out_user", "secret_sauce", false)]
-    [InlineData("standard_user", "wrong_password", false)]
-    [InlineData("", "secret_sauce", false)]
-    [InlineData("standard_user", "", false)]
+    [MemberData(nameof(LoginTestData))]
     public async Task BasicLoginTest(string username, string password, bool shouldSucceed)
     {
         var loginPage = new LoginPage(Page);

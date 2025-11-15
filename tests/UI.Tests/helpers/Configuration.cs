@@ -6,15 +6,13 @@ namespace UI.Tests.helpers;
 public static class Configuration
 {
     
-    public static IConfigurationRoot Config { get; private set; }
-    public static string? BaseUrl => Config["BaseUrl"];
-    public static List<Credentials>? Credentials => Config.GetSection("Credentials").Get<List<Credentials>>();
-    public static void Configure()
+    public static string? BaseUrl => Configure()["BaseUrl"];
+    public static IEnumerable<Credentials>? Credentials => Configure().GetSection("Credentials").Get<IEnumerable<Credentials>>();
+    public static IConfigurationRoot Configure()
     {
-        Config = new ConfigurationBuilder()
+        return new ConfigurationBuilder()
             .AddJsonFile("config/appsettings.json", optional: false, reloadOnChange: false)
             .AddJsonFile("config/credentials.json", optional: false, reloadOnChange: false)
             .Build();
-            Console.WriteLine();
     }
 }
