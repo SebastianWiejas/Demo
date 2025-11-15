@@ -12,7 +12,6 @@ public class CartPage
     private ILocator CartItemPrice => CartItem.GetByTestId("inventory-item-price");
     private ILocator CartItemQuantity => CartItem.GetByTestId("item-quantity");
     private ILocator CheckoutButton => CartContainer.GetByTestId("checkout");
-    private string RemoveButtonText => "Remove";
 
     public CartPage(IPage page)
     {
@@ -29,23 +28,6 @@ public class CartPage
         return await CartItem.CountAsync();
     }
 
-    private async Task<ILocator> GetCartItemByNameAsync(string name)
-    {
-        var items = CartItemName
-            .Filter(new LocatorFilterOptions { HasTextString = name });
-
-        // if (items.Count == 0)
-        // {
-        //     throw new Exception($"There is no cart item with name '{name}'");
-        // }
-        // if (items.Count > 1)
-        // {
-        //     throw new Exception($"There is more than one cart item with name '{name}'");
-        // }
-
-        return CartItem.Filter(new LocatorFilterOptions { Has = items }).First;
-    }
-
     public async Task ProceedToCheckoutAsync()
     {
         await CheckoutButton.ClickAsync();
@@ -53,7 +35,10 @@ public class CartPage
 
     public async Task<bool> IsItemInCartAsync(string name)
     {
-        return await GetCartItemByNameAsync(name).Result.CountAsync() == 1; //TODO: explain in readme why I use == 1, and alternatives
+        var items = CartItemName.Filter(new LocatorFilterOptions { HasTextString = name });
+
+        var cartItems = await CartItem.Filter(new LocatorFilterOptions { Has = items }).AllAsync();
+        return cartItems.Count > 0;
     }
 
     public async Task<string> GetItemDescriptionAsync(string name)
@@ -72,5 +57,23 @@ public class CartPage
     {
         var item = await GetCartItemByNameAsync(name);
         return await item.Locator(CartItemQuantity).InnerTextAsync();
+    }
+
+    private async Task<ILocator> GetCartItemByNameAsync(string name)
+    {
+        var items = CartItemName.Filter(new LocatorFilterOptions { HasTextString = name });
+
+        var cartItems = await CartItem.Filter(new LocatorFilterOptions { Has = items }).AllAsync();
+
+        if (cartItems.Count == 0)
+        {
+            throw new Exception($"There is no cart item with name '{name}'");
+        }
+        if (cartItems.Count > 1)
+        {
+            throw new Exception($"There is more than one cart item with name '{name}'");
+        }
+
+        return cartItems[0];
     }
 }

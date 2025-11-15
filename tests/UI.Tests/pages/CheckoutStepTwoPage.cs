@@ -70,25 +70,6 @@ public class CheckoutStepTwoPage
         return items.Count > 0;
     }
 
-    private async Task<ILocator> GetItemByNameAsync(string name)
-    {
-        var items = ItemName
-            .Filter(new LocatorFilterOptions { HasTextString = name });
-
-        var parentItems = await Item.Filter(new LocatorFilterOptions { Has = items }).AllAsync();
-
-        if (parentItems.Count == 0)
-        {
-            throw new Exception($"There is no item with name '{name}'");
-        }
-        if (parentItems.Count > 1)
-        {
-            throw new Exception($"There is more than one item with name '{name}'");
-        }
-        
-        return parentItems[0];
-    }
-
     public async Task<string> GetItemDescriptionAsync(string name)
     {
         var item = await GetItemByNameAsync(name);
@@ -106,6 +87,25 @@ public class CheckoutStepTwoPage
         var item = await GetItemByNameAsync(name);
         var quantityText = await item.Locator(ItemQuantity).InnerTextAsync();
         return int.Parse(quantityText);
+    }
+
+    private async Task<ILocator> GetItemByNameAsync(string name)
+    {
+        var items = ItemName
+            .Filter(new LocatorFilterOptions { HasTextString = name });
+
+        var parentItems = await Item.Filter(new LocatorFilterOptions { Has = items }).AllAsync();
+
+        if (parentItems.Count == 0)
+        {
+            throw new Exception($"There is no item with name '{name}'");
+        }
+        if (parentItems.Count > 1)
+        {
+            throw new Exception($"There is more than one item with name '{name}'");
+        }
+
+        return parentItems[0];
     }
 
 }
