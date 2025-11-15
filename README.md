@@ -1,5 +1,5 @@
 # Projekt Demo
-Ten projekt zawiera przykładową implementację testów API oraz testów UI. Testy UI zrealizowane w oparciu o POM.
+Ten projekt zawiera przykładową implementację testów API oraz testów UI. Testy UI są zrealizowane w oparciu o POM.
 
 # Tech Stack
 
